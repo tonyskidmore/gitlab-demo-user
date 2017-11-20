@@ -1,0 +1,14 @@
+---
+gitlab_access_level: developer
+gitlab_user: demouser
+gitlab_user_password: G1tL4b17
+gitlab_email_domain: cloud-msp.net
+gitlab_server_url: https://gitlabdemo.cloud-msp.net
+gitlab_validate_certs: True
+gitlab_confirm: no
+gitlab_group: demogroup
+gitlab_issues_enabled: True
+gitlab_wiki_enabled: True
+gitlab_snippets_enabled: True
+
+

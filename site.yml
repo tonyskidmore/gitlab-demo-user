@@ -1,0 +1,23 @@
+---
+- name: Configure GitLab for User
+  hosts: localhost
+  tags:
+    - gitlab
+  vars:
+    demo_user: askidmore
+
+  pre_tasks:
+
+  - name: install pyapi-gitlab
+    pip:
+      name: pyapi-gitlab
+    become: yes
+
+  roles:
+
+  - name: configure gitlab for user
+    role: gitlab_user
+    gitlab_user: "{{ demo_user }}"
+    tags:
+      - gitlab
+

@@ -1,0 +1,40 @@
+---
+- name: create group
+  gitlab_group:
+    server_url: "{{ gitlab_server_url }}"
+    validate_certs: "{{ gitlab_validate_certs }}"
+    login_user: "{{ gitlab_root_user }}"
+    login_password: "{{ gitlab_root_user_password }}"
+    name: "{{ gitlab_group }}"
+    state: present
+
+- name: create user in gitlab
+  gitlab_user:
+    server_url: "{{ gitlab_server_url }}"
+    access_level: "{{ gitlab_access_level }}"
+    confirm: "{{ gitlab_confirm }}"
+    validate_certs: "{{ gitlab_validate_certs }}"
+    login_user: "{{ gitlab_root_user }}"
+    login_password: "{{ gitlab_root_user_password }}"
+    name: "{{ gitlab_user }}"
+    username: "{{ gitlab_user }}"
+    # error when trying to add user in group
+    group: "{{ gitlab_group }}"
+    password: "{{ gitlab_user_password }}"
+    email: "{{ gitlab_user }}@{{ gitlab_email_domain }}"
+    state: present
+
+- name: create gitlab project
+  gitlab_project:
+    server_url: "{{ gitlab_server_url }}"
+    validate_certs: "{{ gitlab_validate_certs }}"
+    login_user: "{{ gitlab_root_user }}"
+    login_password: "{{ gitlab_root_user_password }}"
+    name: "{{ gitlab_user }}-project"
+    group: "{{ gitlab_group }}"
+    issues_enabled: "{{ gitlab_issues_enabled }}"
+    wiki_enabled: "{{ gitlab_wiki_enabled }}"
+    snippets_enabled: "{{ gitlab_snippets_enabled }}"
+    visibility_level: 10
+    import_url: "{{ gitlab_import_url | default(omit) }}"
+    state: present
