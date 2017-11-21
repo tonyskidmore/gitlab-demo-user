@@ -1,4 +1,4 @@
 ---
 gitlab_root_user: "{{ vault_gitlab_root_user }}"
 gitlab_root_user_password: "{{ vault_gitlab_root_user_password }}"
-
+gitlab_user_password: "{{ vault_user_password }}"

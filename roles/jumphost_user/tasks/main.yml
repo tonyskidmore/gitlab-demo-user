@@ -1,0 +1,11 @@
+---
+- name: create group
+  user:
+    name: "{{ jumphost_user | trim }}"
+    password: "{{ jumphost_user_password | password_hash('sha512') }}"
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+    state: present
+
+
