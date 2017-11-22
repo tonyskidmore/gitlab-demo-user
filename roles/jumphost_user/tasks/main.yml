@@ -1,11 +1,27 @@
 ---
+- name: set user fact
+  set_fact:
+    jumphost_username: "{{ jumphost_user | trim }}"
+
 - name: create group
   user:
-    name: "{{ jumphost_user | trim }}"
+    name: "{{ jumphost_username }}"
     password: "{{ jumphost_user_password | password_hash('sha512') }}"
     generate_ssh_key: yes
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
     state: present
+
+- name: create ppk
+  command: "puttygen id_rsa -o {{ jumphost_username }}.ppk"
+  args:
+    chdir: "/home/{{ jumphost_username }}/.ssh"
+    creates: "/home/{{ jumphost_username }}/.ssh/{{ jumphost_username }}.ppk"
+
+- name: copy key
+  copy:
+    src: "/home/{{ jumphost_username }}/.ssh/{{ jumphost_username }}.ppk"
+    dest: "/var/www/html/{{ jumphost_username }}.ppk"
+    remote_src: yes
 
 
