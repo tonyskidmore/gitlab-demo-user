@@ -35,24 +35,6 @@
     dest: "/var/www/html/{{ jumphost_username }}.ppk"
     remote_src: yes
 
-- name: configure git email address
-  git_config:
-    name: user.email
-    scope: global
-    value: "{{ jumphost_username }}{{ jumphost_email_domain }}"
-
-- name: configure git user
-  git_config:
-    name: user.name
-    scope: global
-    value: "{{ jumphost_username }}"
-
-- name: configure git push default
-  git_config:
-    name: push.default
-    scope: global
-    value: simple
-
 - name: create ssh config file
   template:
     src: config.j2
@@ -61,8 +43,34 @@
     group: "{{ jumphost_username }}"
     mode: 0600
 
-- name: configure known_hosts
-  known_hosts:
-    path: "/home/{{ jumphost_username }}/.ssh/known_hosts"
-    name: "{{ gitlab_server }}.{{ jumphost_email_domain }}"
-    key: "{{ gitlab_server_public_key }}"
+# not working on first attempt use an easy alternative instead
+# - name: configure known_hosts
+#  known_hosts:
+#    path: "/home/{{ jumphost_username }}/.ssh/known_hosts"
+#    name: "{{ gitlab_server }}.{{ jumphost_email_domain }}"
+#    key: "{{ gitlab_server_public_key }}"
+
+- name: create known_hosts file
+  template:
+    src: known_hosts.j2
+    dest: "/home/{{ jumphost_username }}/.ssh/known_hosts"
+    owner: "{{ jumphost_username }}"
+    group: "{{ jumphost_username }}"
+    mode: 0600
+
+- name: create bash history
+  template:
+    src: bash_history.j2
+    dest: "/home/{{ jumphost_username }}/.bash_history"
+    owner: "{{ jumphost_username }}"
+    group: "{{ jumphost_username }}"
+    mode: 0600
+
+- name: create bash history
+  template:
+    src: gitconfig.j2
+    dest: "/home/{{ jumphost_username }}/.gitconfig"
+    owner: "{{ jumphost_username }}"
+    group: "{{ jumphost_username }}"
+    mode: 0664
+
