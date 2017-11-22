@@ -1,4 +1,20 @@
 ---
+- name: Configure jumphost for User
+  hosts: jumphost
+  become: True
+  tags:
+    - jumphost
+  vars:
+    demo_user: demouser
+
+  roles:
+
+  - name: configure jumphost for user
+    role: jumphost_user
+    jumphost_user: "{{ demo_user }}"
+    tags:
+      - jumphost
+
 - name: Configure GitLab for User
   hosts: localhost
   tags:
@@ -21,18 +37,3 @@
     tags:
       - gitlab
 
-- name: Configure jumphost for User
-  hosts: jumphost
-  become: True
-  tags:
-    - jumphost
-  vars:
-    demo_user: demouser
-
-  roles:
-
-  - name: configure jumphost for user
-    role: jumphost_user
-    jumphost_user: "{{ demo_user }}"
-    tags:
-      - jumphost

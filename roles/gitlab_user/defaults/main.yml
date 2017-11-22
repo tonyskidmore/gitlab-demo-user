@@ -10,5 +10,7 @@ gitlab_group: demogroup
 gitlab_issues_enabled: True
 gitlab_wiki_enabled: True
 gitlab_snippets_enabled: True
-gitlab_import_url: https://github.com/tonyskidmore/demo-project.git
-
+gitlab_projects:
+  - name: "{{ gitlab_user }}-broken-python"
+    url: https://github.com/tonyskidmore/demo-broken-python.git
+    group: "{{ gitlab_group }}"

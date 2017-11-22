@@ -30,11 +30,12 @@
     validate_certs: "{{ gitlab_validate_certs }}"
     login_user: "{{ gitlab_root_user }}"
     login_password: "{{ gitlab_root_user_password }}"
-    name: "{{ gitlab_user }}-project"
-    group: "{{ gitlab_group }}"
+    name: "{{ item.name }}"
+    group: "{{ item.group }}"
     issues_enabled: "{{ gitlab_issues_enabled }}"
     wiki_enabled: "{{ gitlab_wiki_enabled }}"
     snippets_enabled: "{{ gitlab_snippets_enabled }}"
     visibility_level: 10
-    import_url: "{{ gitlab_import_url | default(omit) }}"
+    import_url: "{{ item.url | default(omit) }}"
     state: present
+  with_items: "{{ gitlab_projects }}"
