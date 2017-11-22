@@ -3,7 +3,7 @@
   set_fact:
     jumphost_username: "{{ jumphost_user | trim }}"
 
-- name: create group
+- name: create user
   user:
     name: "{{ jumphost_username }}"
     password: "{{ jumphost_user_password | password_hash('sha512') }}"
@@ -11,6 +11,13 @@
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
     state: present
+  register: create_user
+
+- name: set authorized_keys
+  authorized_key:
+    user: "{{ jumphost_username }}"
+    state: present
+    key: "{{ create_user.ssh_public_key }}"
 
 - name: create ppk
   command: "puttygen id_rsa -o {{ jumphost_username }}.ppk"
