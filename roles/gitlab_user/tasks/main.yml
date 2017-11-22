@@ -22,6 +22,8 @@
     group: "{{ gitlab_group }}"
     password: "{{ gitlab_user_password }}"
     email: "{{ gitlab_user }}@{{ gitlab_email_domain }}"
+    sshkey_file: "{{ gitlab_ssh_public_key | default(omit) }}"
+    sshkey_name: "{{ gitlab_user }}"
     state: present
 
 - name: create gitlab project

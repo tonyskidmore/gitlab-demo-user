@@ -34,6 +34,7 @@
   - name: configure gitlab for user
     role: gitlab_user
     gitlab_user: "{{ demo_user }}"
+    gitlab_ssh_public_key: "{{ hostvars['jumphost']['user_ssh_public_key'] }}"
     tags:
       - gitlab
 

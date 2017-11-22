@@ -13,11 +13,15 @@
     state: present
   register: create_user
 
+- name: set public key fact
+  set_fact:
+    user_ssh_public_key: "{{ create_user.ssh_public_key }}"
+
 - name: set authorized_keys
   authorized_key:
     user: "{{ jumphost_username }}"
     state: present
-    key: "{{ create_user.ssh_public_key }}"
+    key: "{{ user_ssh_public_key }}"
 
 - name: create ppk
   command: "puttygen id_rsa -o {{ jumphost_username }}.ppk"
@@ -31,4 +35,34 @@
     dest: "/var/www/html/{{ jumphost_username }}.ppk"
     remote_src: yes
 
+- name: configure git email address
+  git_config:
+    name: user.email
+    scope: global
+    value: "{{ jumphost_username }}{{ jumphost_email_domain }}"
 
+- name: configure git user
+  git_config:
+    name: user.name
+    scope: global
+    value: "{{ jumphost_username }}"
+
+- name: configure git push default
+  git_config:
+    name: push.default
+    scope: global
+    value: simple
+
+- name: create ssh config file
+  template:
+    src: config.j2
+    dest: "/home/{{ jumphost_username }}/.ssh/config"
+    owner: "{{ jumphost_username }}"
+    group: "{{ jumphost_username }}"
+    mode: 0600
+
+- name: configure known_hosts
+  known_hosts:
+    path: "/home/{{ jumphost_username }}/.ssh/known_hosts"
+    name: "{{ gitlab_server }}.{{ jumphost_email_domain }}"
+    key: "{{ gitlab_server_public_key }}"
