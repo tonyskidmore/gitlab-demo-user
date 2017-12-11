@@ -43,9 +43,9 @@
     line: "{{ jumphost_username }}\t{{ jumphost_user_sudo_entry }}"
     backup: yes
   when:
+    - jumphost_user_sudo is defined
+    - jumphost_user_sudo
     - jumphost_user_sudo_entry is defined
-    - jumphost_user_sudo_entry
-    - jumphost_user_sudo_entry
   register: jumphost_sudo
 
 - block:
