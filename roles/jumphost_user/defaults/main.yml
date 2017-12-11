@@ -2,5 +2,9 @@
 jumphost_user: demouser
 jumphost_user_password: G1tL4b17
 jumphost_email_domain: cloud-msp.net
+jumphost_user_sudo: True
+jumphost_user_sudo_entry: "ALL=(ALL)       NOPASSWD: ALL"
+
+gitlab_process: False
 gitlab_server: gitlabdemo
 gitlab_server_public_key: AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMIGp9ww1hxUUdqWAfpKb808AHaZgiRm2QW4aHLHjJc9kuDAJEm6LFdcpuZUdMnP1nmE04YOfFn260TlMAXKPTo=

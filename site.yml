@@ -37,4 +37,7 @@
     gitlab_ssh_public_key: "{{ hostvars['jumphost']['user_ssh_public_key'] }}"
     tags:
       - gitlab
+    when:
+      - gitlab_user_process is defined
+      - gitlab_user_process
 

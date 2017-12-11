@@ -35,42 +35,60 @@
     dest: "/var/www/html/{{ jumphost_username }}.ppk"
     remote_src: yes
 
-- name: create ssh config file
-  template:
-    src: config.j2
-    dest: "/home/{{ jumphost_username }}/.ssh/config"
-    owner: "{{ jumphost_username }}"
-    group: "{{ jumphost_username }}"
-    mode: 0600
+- name: Configure sudo access
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^{{ jumphost_username }}"
+    line: "{{ jumphost_username }}\t{{ jumphost_user_sudo_entry }}"
+    backup: yes
+  when:
+    - jumphost_user_sudo_entry is defined
+    - jumphost_user_sudo_entry
+    - jumphost_user_sudo_entry
+  register: jumphost_sudo
 
-# not working on first attempt use an easy alternative instead
-# - name: configure known_hosts
-#  known_hosts:
-#    path: "/home/{{ jumphost_username }}/.ssh/known_hosts"
-#    name: "{{ gitlab_server }}.{{ jumphost_email_domain }}"
-#    key: "{{ gitlab_server_public_key }}"
+- block:
 
-- name: create known_hosts file
-  template:
-    src: known_hosts.j2
-    dest: "/home/{{ jumphost_username }}/.ssh/known_hosts"
-    owner: "{{ jumphost_username }}"
-    group: "{{ jumphost_username }}"
-    mode: 0600
+  - name: create ssh config file
+    template:
+      src: config.j2
+      dest: "/home/{{ jumphost_username }}/.ssh/config"
+      owner: "{{ jumphost_username }}"
+      group: "{{ jumphost_username }}"
+      mode: 0600
 
-- name: create bash history
-  template:
-    src: bash_history.j2
-    dest: "/home/{{ jumphost_username }}/.bash_history"
-    owner: "{{ jumphost_username }}"
-    group: "{{ jumphost_username }}"
-    mode: 0600
+  # not working on first attempt use an easy alternative instead
+  # - name: configure known_hosts
+  #  known_hosts:
+  #    path: "/home/{{ jumphost_username }}/.ssh/known_hosts"
+  #    name: "{{ gitlab_server }}.{{ jumphost_email_domain }}"
+  #    key: "{{ gitlab_server_public_key }}"
 
-- name: create gitconfig
-  template:
-    src: gitconfig.j2
-    dest: "/home/{{ jumphost_username }}/.gitconfig"
-    owner: "{{ jumphost_username }}"
-    group: "{{ jumphost_username }}"
-    mode: 0664
+  - name: create known_hosts file
+    template:
+      src: known_hosts.j2
+      dest: "/home/{{ jumphost_username }}/.ssh/known_hosts"
+      owner: "{{ jumphost_username }}"
+      group: "{{ jumphost_username }}"
+      mode: 0600
 
+  - name: create bash history
+    template:
+      src: bash_history.j2
+      dest: "/home/{{ jumphost_username }}/.bash_history"
+      owner: "{{ jumphost_username }}"
+      group: "{{ jumphost_username }}"
+      mode: 0600
+
+  - name: create gitconfig
+    template:
+      src: gitconfig.j2
+      dest: "/home/{{ jumphost_username }}/.gitconfig"
+      owner: "{{ jumphost_username }}"
+      group: "{{ jumphost_username }}"
+      mode: 0664
+
+  when: 
+    - gitlab_process is defined
+    - gitlab_process
